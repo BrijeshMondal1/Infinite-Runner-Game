@@ -21,15 +21,15 @@ var rockDestroy;
 //loding the images
 function preload(){
   
-  monkey_running =            loadAnimation("sprite_0.png","sprite_1.png","sprite_2.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_7.png","sprite_8.png")
+  monkey_running = loadAnimation("monkey/sprite_0.png","monkey/sprite_1.png","monkey/sprite_2.png","monkey/sprite_3.png","monkey/sprite_4.png","monkey/sprite_5.png","monkey/sprite_6.png","monkey/sprite_7.png","monkey/sprite_8.png");
   monkeySound = loadSound("monkey.mp3");
-  bananaImage = loadImage("banana.png");
-  obstacleImage = loadImage("obstacle.png");
-  grassImage = loadImage("grass-.png");
+  bananaImage = loadImage("images/banana.png");
+  obstacleImage = loadImage("images/obstacle.png");
+  grassImage = loadImage("images/grass-.png");
   gameOverSound = loadSound("gameover.mp3");
   gameWinSound = loadSound("game_win.mp3");
-  forestImage = loadImage("forest.png");
-  monkeyEnd = loadAnimation("sprite_0.png");
+  forestImage = loadImage("images/forest.png");
+  monkeyEnd = loadAnimation("monkey/sprite_0.png");
   levelUp = loadSound("level_up.mp3");
   rockDestroy = loadSound("rock_crash.mp3");
   
@@ -39,10 +39,7 @@ function preload(){
 //creating sprites and groups
 function setup() {
  createCanvas(500,450);
-  
-  //creating the background
 
- 
   //creating the monkey
   monkey = createSprite(80,400);
   monkey.addAnimation("monkey",monkey_running);
@@ -50,6 +47,9 @@ function setup() {
   monkey.scale = 0.18;
   monkey.setCollider("rectangle",0,0,500,600);
   monkey.debug = false;
+
+  camera.x = monkey.x;
+  camera.y = 225;
 
   //creating the invisible ground
   invisibleGround = createSprite(80,460,150,20);
@@ -65,7 +65,7 @@ function setup() {
 //adding functions to the objects
 function draw() {
   //clearing the screen
-  background("skyblue");
+  background(forestImage);
 
 if(gameState === START || gameState === PLAY){  
 
@@ -106,16 +106,14 @@ if(gameState === START || gameState === PLAY){
    monkey.scale = 0.18; 
     
    textStyle("bold");
+   textAlign(CENTER);
    fill("red");
    textFont("comic sans ms");
    textSize(15);
-   text("CLICK ON THE SCREEN FIRST",140,150);
+   text("CLICK ON THE SCREEN FIRST",70,150);
    fill("orangered");
-   text("THEN PRESS 'SPACE' TO START THE GAME",85,175);
+   text("THEN PRESS 'SPACE' TO START THE GAME",60,175);
    fill("blue");
-   text("THE MONKEY HAS 15 BANANAS ONLY",100,200);
-   fill("BROWN");
-   text("MONKEY HAS TO TOUCH 10 BANANAS",100,225);
 
    //changing animation of the monkey
      monkey.changeAnimation("monkey",monkey_running);
@@ -173,8 +171,7 @@ if(gameState === START || gameState === PLAY){
     fill("WHITE");
     text("SURVIVAL TIME : " + time,200,30);
     fill("orangered")
-    text("SCORE : " + score + " / 10",215,50);
-    console.log("fruitLeft : " + fruitLeft);
+    text("SCORE : " + score,215,50);
 }
   
   if(gameState === END){
@@ -196,24 +193,6 @@ if(gameState === START || gameState === PLAY){
     textSize(15);
     textFont("comic sans ms");
     text("PRESS 'R' TO RESTART",155,210);
-    
-    if(score === 10){
-      
-      textStyle("bold");
-      textSize(20);
-      textFont("comic sans ms");
-      fill("blue");
-      text("YOU WIN",200,180);
-    }
-    
-    if(score < 10){
-           
-      textStyle("bold");
-      textSize(20);
-      textFont("comic sans ms");
-      fill("darkviolet");
-      text("YOU LOSE",190,180); 
-    }
     
     //creating reset function
     if(keyDown("r")){
@@ -240,7 +219,7 @@ if(gameState === START || gameState === PLAY){
 function spawnObjects(){
   
   //creating random banana spawn function
-  if(frameCount % 80 === 0 && fruitLeft > 0){
+  if(frameCount % 80 === 0){
     
     banana = createSprite(550,Math.round(random(100,300)));
     banana.addImage(bananaImage);
@@ -278,13 +257,9 @@ function scoreIncrease(){
   
   if(monkey.isTouching(FoodGroup)){
     
-    score = score + 1;
     FoodGroup.destroyEach();
-    
-    if(score % 4 === 0 && score > 0){
-       monkey.scale = monkey.scale + 0.03;
-       levelUp.play();
-    }
+    score += 1;
+
   }
   
 }
@@ -312,20 +287,5 @@ function gameOver(){
     console.log("Your chances left : " + chances);
     }
   }
-  
-  if(score === 10){
-    gameState = END;
-    gameWinSound.play();
-  }
-  
-  if(fruitLeft === 0){
-    
-    setTimeout(function(){
-    if(score < 10 && fruitLeft === 0 && gameState === PLAY){
-      gameState = END;
-      gameOverSound.play();
-      }
-    },3500);
-    
-  }
+
 }
