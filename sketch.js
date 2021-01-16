@@ -192,7 +192,7 @@ if(gameState === START || gameState === PLAY){
     fill("red");
     textSize(15);
     textFont("comic sans ms");
-    text("PRESS 'R' TO RESTART",155,210);
+    text("PRESS 'R' TO RESTART",100,210);
     
     //creating reset function
     if(keyDown("r")){
